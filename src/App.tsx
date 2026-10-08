@@ -6,23 +6,29 @@ const array = Array.from({ length: 10 }, () => ['Mazánek', 'Merta']).flat();
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState<string | undefined>(undefined);
   
-  if (selectedPlayer) {
-    return <PaymentDetail name={selectedPlayer} close={() => setSelectedPlayer(undefined)} />
-  }
-
   return (
-    <div className="main-grid">
-      {array.map((item, index) => (
-          <button
-              key={index}
-              className="grid-item"
-              onClick={() => setSelectedPlayer(item)}
-          >
-            {item}
-          </button>
-      ))}
-    </div>
-  )
+  <div className="layout">
+      {
+          selectedPlayer
+            ? (
+                  <PaymentDetail name={selectedPlayer} close={() => setSelectedPlayer(undefined)} />
+              )
+              : ( 
+                  <div className="main-grid">
+                    {array.map((item, index) => (
+                          <button
+                              key={index}
+                              className="grid-item"
+                              onClick={() => setSelectedPlayer(item)}
+                          >
+                              {item}
+                          </button>
+                      ))}
+                    </div>
+              )
+      }
+  </div>
+  );
 }
 
 function PaymentDetail({name, close}: {name: string, close: () => void}) {
