@@ -1,7 +1,8 @@
 
 $background: #ffffff;
 $text: #222222;
-
+$ok-color: #33aa33; 
+$warning-color: #dd7722;
 *,
 *::before,
 *::after {
@@ -39,7 +40,9 @@ body {
 }
 
 .grid-item {
-  
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
   border: 1px solid blue; 
   border-radius: 5px;
   display: grid;
@@ -51,15 +54,15 @@ body {
 }
 
 .bg-blue {
-  background-color: #3333dd;
+  background-color: $warning-color;
 }
 
 .bg-ok {
-  background-color: #33aa33;
+  background-color: $ok-color;
 }
 
 .bg-warning {
-  background-color: #dd7722;
+  background-color: $warning-color;
 }
 
 
@@ -102,9 +105,9 @@ body {
     background-color: gray;
   }
   &.PaidByCard {
-    background-color: green;
+    background-color: $ok-color;
   }
   &.PaidByCash {
-    background-color: orange;
+    background-color: $warning-color;
   }
 }
