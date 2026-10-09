@@ -22,12 +22,11 @@ body {
   font-size: 16px;
   background: $background;
   color: $text;
-  
 }
 
 .layout {
   width: 100%;
-  max-width: 800px;
+  max-width: 500px;
   margin: 0 auto;
   height: 100%;
 }
@@ -87,8 +86,6 @@ body {
     
   }
   
-  
-  
   button {
     font: inherit;
     width: 100%;
@@ -97,5 +94,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+.bg-payment {
+  &.None {
+    background-color: gray;
+  }
+  &.PaidByCard {
+    background-color: green;
+  }
+  &.PaidByCash {
+    background-color: orange;
   }
 }

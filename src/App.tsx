@@ -1,27 +1,45 @@
-import { useState } from 'react'
-import { QRCodeSVG } from "qrcode.react";
+import {useState} from 'react'
+import {QRCodeSVG} from "qrcode.react";
+import {loadPlayers, PaymentStatusEnum, type Player, savePlayers} from "./storage.ts";
 
-const array = Array.from({ length: 10 }, () => ['Mazánek', 'Merta']).flat();
+function loadOrInitializePlayers(): Player[] {
+    return loadPlayers()
+        ?? Array.from({length: 20}).map((_, index) => ({
+            name: `Mazánek ${index + 1}`,
+            number: index + 1,
+            status: PaymentStatusEnum.None
+        }));
+}
 
 function App() {
-  const [selectedPlayer, setSelectedPlayer] = useState<string | undefined>(undefined);
+    const [players, setPlayers] = useState(loadOrInitializePlayers);
+    const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>(undefined);
   
+    function setPayment(payment: PaymentStatusEnum | undefined) {
+        if (selectedPlayer && payment) {
+            const newArray = players.map(x => x.number === selectedPlayer.number ? {...x, status: payment} : x);
+            savePlayers(newArray);
+            setPlayers(newArray);
+        }
+        setSelectedPlayer(undefined);
+    }
+    
   return (
   <div className="layout">
       {
           selectedPlayer
             ? (
-                  <PaymentDetail name={selectedPlayer} close={() => setSelectedPlayer(undefined)} />
+                  <PaymentDetail player={selectedPlayer} close={setPayment} />
               )
               : ( 
                   <div className="main-grid">
-                    {array.map((item, index) => (
+                    {players.map((item, index) => (
                           <button
                               key={index}
-                              className="grid-item"
+                              className={`grid-item bg-payment ${item.status}`}
                               onClick={() => setSelectedPlayer(item)}
                           >
-                              {item}
+                              {item.name}
                           </button>
                       ))}
                     </div>
@@ -31,19 +49,19 @@ function App() {
   );
 }
 
-function PaymentDetail({name, close}: {name: string, close: () => void}) {
+function PaymentDetail({player, close}: {player: Player, close: (paymentType: PaymentStatusEnum | undefined) => void}) {
   return (
-      <div className="payment-detail" >
-        <div className="title">{name}</div>
+      <div className="payment-detail">
+        <div className="title">{player.name}</div>
         <div className="qr-container">
           <QRCodeSVG
               value="https://example.com/some-data"
               className="qr-code"
           />
         </div>
-        <button className="bg-ok color-white" onClick={close}>Zaplaceno</button>
-        <button className="bg-warning color-white" onClick={close}>Zaplatil jsem hotově</button>
-        <button onClick={close}>Zrušit</button>
+        <button className="bg-ok color-white" onClick={() => close(PaymentStatusEnum.PaidByCard)}>Zaplaceno</button>
+        <button className="bg-warning color-white" onClick={() => close(PaymentStatusEnum.PaidByCash)}>Zaplatil jsem hotově</button>
+        <button onClick={() => close(undefined)}>Zrušit</button>
       </div>
   );
 }
