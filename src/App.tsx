@@ -55,7 +55,8 @@ function PaymentDetail({player, close}: {player: Player, close: (paymentType: Pa
         <div className="title">{player.name}</div>
         <div className="qr-container">
           <QRCodeSVG
-              value="https://example.com/some-data"
+              level="M"
+              value="SPD*1.0*ACC:CZ7401000000002480210267*AM:270*CC:CZK*MSG:Hokej, Merta*X-VS:1"
               className="qr-code"
           />
         </div>
